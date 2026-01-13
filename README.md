@@ -51,11 +51,11 @@ The application follows the **Backend-for-Frontend (BFF)** pattern:
    ```bash
    git clone [https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git](https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git)
 
-```2. **Install dependencies:**
-   ```bash
-npm install
 
-```
+2. **Install dependencies:**
+   ```bash
+   npm install
+
 
 
 3. **Configure Environment Variables:**
