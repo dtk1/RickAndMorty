@@ -50,14 +50,9 @@ The application follows the **Backend-for-Frontend (BFF)** pattern:
 1. **Clone the repository:**
    ```bash
    git clone [https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git](https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git)
-
-
 2. **Install dependencies:**
    ```bash
    npm install
-
-
-
 3. **Configure Environment Variables:**
 Create a `.env.local` file in the root directory:
 ```env
