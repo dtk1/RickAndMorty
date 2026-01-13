@@ -1,122 +1,52 @@
-# Rick and Morty - Fullstack приложение
+# 🧪 Rick and Morty Universe Explorer
 
-Fullstack приложение на Next.js (App Router) с TypeScript и Tailwind CSS для изучения персонажей из мультсериала Rick and Morty.
-Вебсайт: https://rick-and-morty-woad-ten.vercel.app/
-## Технологии
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Gemini AI](https://img.shields.io/badge/AI-Gemini_1.5_Flash-orange?style=for-the-badge&logo=google-gemini)
 
-- **Next.js 14** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **Shadcn UI** компоненты
-- **next-themes** для поддержки темной/светлой темы
-- **Rick and Morty API** (через прокси-сервер)
+**Rick and Morty Universe Explorer** is a high-performance Fullstack application built for fans of the iconic animated series. This project demonstrates modern web development patterns, integrating real-time data with Generative AI to create a unique, interactive experience.
 
-## Особенности
+**🔗 Live Demo:** https://rick-and-morty-woad-ten.vercel.app/
 
-### Архитектура API (Level 2)
-- Все запросы к внешнему API проходят через серверные роуты `/app/api/proxy/[...path]/route.ts`
-- Фронтенд не обращается напрямую к `rickandmortyapi.com`
+---
 
-### UI (Level 1)
-- Главная страница с поиском и фильтрацией персонажей
-- Компоненты Shadcn UI (Card, Input, Button, Skeleton)
-- Сетка карточек персонажей с индикаторами статуса (Alive, Dead, Unknown)
-- Адаптивный дизайн
+## ✨ Key Features
 
-### Навигация (Level 2)
-- Детальные страницы для персонажей (`/character/[id]`)
-- Функциональная пагинация с поддержкой большого количества страниц
+- 🔍 **Advanced Search & Discovery:** Instant character filtering by name, status, species, and gender with debounced input for optimal performance.
+- 🧠 **AI-Powered Insights:** Integrated with **Google Gemini 1.5 Flash** to generate "Rick-style" character descriptions, personality analyses, and fan theories on the fly.
+- 🌓 **Dynamic Theming:** Seamless transition between Light and Dark modes with persistent user preference storage.
+- ⚡ **Optimized UX:** Implementation of Skeleton Loaders and progressive image loading to ensure a smooth browsing experience even on slow connections.
+- 📱 **Mobile-First Design:** A fully responsive interface crafted with Tailwind CSS and Radix UI primitives.
 
-### Бонусный уровень
-- Поддержка темной и светлой темы (next-themes)
-- Skeleton loaders для состояния загрузки
-- AI эндпоинт `/api/ai-description` с мок-данными (готов для интеграции с OpenAI/Gemini)
+---
 
-## Структура проекта
+## 🛠 Technical Stack
 
-```
-├── app/
-│   ├── api/
-│   │   ├── proxy/[...path]/route.ts    # Прокси для Rick and Morty API
-│   │   └── ai-description/route.ts     # AI эндпоинт (мок)
-│   ├── character/[id]/page.tsx         # Детальная страница персонажа
-│   ├── layout.tsx                      # Корневой layout с ThemeProvider
-│   ├── page.tsx                        # Главная страница
-│   └── globals.css                     # Глобальные стили и CSS переменные
-├── components/
-│   ├── ui/                             # Shadcn UI компоненты
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   ├── select.tsx
-│   │   └── skeleton.tsx
-│   ├── CharacterCard.tsx               # Карточка персонажа
-│   ├── CharacterGrid.tsx               # Сетка персонажей
-│   ├── Filters.tsx                     # Компонент фильтров
-│   ├── Pagination.tsx                  # Компонент пагинации
-│   ├── SearchBar.tsx                   # Поисковая строка
-│   ├── ThemeProvider.tsx               # Провайдер темы
-│   └── ThemeToggle.tsx                 # Переключатель темы
-├── hooks/
-│   └── useDebounce.ts                  # Хук для debounce поиска
-└── lib/
-    ├── types.ts                        # TypeScript типы
-    └── utils.ts                        # Утилиты (cn, getStatusColor)
-```
+### Frontend
+- **Next.js 14 (App Router)**: Utilizing Server Components for fast initial paint and Client Components for interactivity.
+- **Tailwind CSS**: Utility-first styling for a custom, modern aesthetic.
+- **Shadcn UI**: A collection of accessible, high-quality UI components.
+- **Lucide React**: For consistent and scalable iconography.
 
-## Установка и запуск
+### Backend & Architecture
+- **API Proxy Layer**: Implemented **Backend-for-Frontend (BFF)** pattern. All external API calls are routed through internal Next.js API endpoints to ensure security and data sanitization.
+- **Google Generative AI**: Leverages the Gemini 1.5 Flash model for lightning-fast AI content generation.
+- **Type Safety**: End-to-end TypeScript integration for robust development and maintenance.
 
-1. Установите зависимости:
-```bash
-npm install
-```
+---
 
-2. Запустите dev сервер:
-```bash
-npm run dev
-```
+## 🏗 Architectural Design
 
-3. Откройте [http://localhost:3000](http://localhost:3000) в браузере
+The application is built with security and scalability in mind:
+- **Zero Client-Side API Leakage**: All sensitive logic and third-party service calls (Rick & Morty API, Gemini AI) happen on the server side.
+- **State Management**: URL-based state sync for filters and pagination, allowing users to share specific search results via links.
+- **Error Boundaries**: Comprehensive error handling for AI failures and API rate limits.
 
-## Скрипты
+---
 
-- `npm run dev` - Запуск dev сервера
-- `npm run build` - Сборка production версии
-- `npm run start` - Запуск production сервера
-- `npm run lint` - Проверка кода линтером
+## 📦 Getting Started
 
-## Использование
-
-### Главная страница
-- Используйте поисковую строку для поиска персонажей по имени
-- Применяйте фильтры по статусу, полу и виду
-- Переключайтесь между страницами с помощью пагинации
-- Переключайте тему с помощью иконки в правом верхнем углу
-
-### Детальная страница персонажа
-- Нажмите на карточку персонажа для просмотра детальной информации
-- Просмотрите AI анализ персонажа (мок-данные)
-- Изучите список эпизодов с участием персонажа
-
-## API Endpoints
-
-### Прокси API
-- `GET /api/proxy/character` - Получить список персонажей
-- `GET /api/proxy/character/[id]` - Получить персонажа по ID
-
-### AI API
-- `POST /api/ai-description` - Получить AI описание персонажа
-  - Body: `{ "characterName": "Rick Sanchez" }`
-  - Response: `{ "characterName": "...", "description": "...", "analysis": {...} }`
-
-## Интеграция с AI
-
-Эндпоинт `/api/ai-description` подготовлен для интеграции с OpenAI или Gemini API. В данный момент используются мок-данные. Для интеграции:
-
-1. Добавьте API ключ в переменные окружения
-2. Замените мок-логику в `app/api/ai-description/route.ts` на реальный вызов API
-3. Обновите типы ответа при необходимости
-
-## Лицензия
-
-MIT
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git](https://github.com/YOUR_USERNAME/rick-and-morty-explorer.git)
