@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { Filters } from "@/components/Filters";
 import { CharacterGrid } from "@/components/CharacterGrid";
@@ -32,11 +32,7 @@ export default function Home() {
     }));
   }, [debouncedSearch]);
 
-  useEffect(() => {
-    fetchCharacters();
-  }, [filters]);
-
-  const fetchCharacters = async () => {
+  const fetchCharacters = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
@@ -60,7 +56,11 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    fetchCharacters();
+  }, [fetchCharacters]);
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));

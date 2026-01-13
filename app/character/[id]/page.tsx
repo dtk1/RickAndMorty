@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,32 +22,7 @@ export default function CharacterPage() {
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [isLoadingAi, setIsLoadingAi] = useState(false);
 
-  useEffect(() => {
-    if (params.id) {
-      fetchCharacter();
-    }
-  }, [params.id]);
-
-  const fetchCharacter = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/proxy/character/${params.id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch character");
-      }
-      const data: Character = await response.json();
-      setCharacter(data);
-      
-      // Загружаем AI описание
-      fetchAiDescription(data.name);
-    } catch (error) {
-      console.error("Error fetching character:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchAiDescription = async (characterName: string) => {
+  const fetchAiDescription = useCallback(async (characterName: string) => {
     setIsLoadingAi(true);
     try {
       const response = await fetch("/api/ai-description", {
@@ -77,7 +52,32 @@ export default function CharacterPage() {
     } finally {
       setIsLoadingAi(false);
     }
-  };
+  }, []);
+
+  const fetchCharacter = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/proxy/character/${params.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch character");
+      }
+      const data: Character = await response.json();
+      setCharacter(data);
+      
+      // Загружаем AI описание
+      fetchAiDescription(data.name);
+    } catch (error) {
+      console.error("Error fetching character:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [params.id, fetchAiDescription]);
+
+  useEffect(() => {
+    if (params.id) {
+      fetchCharacter();
+    }
+  }, [params.id, fetchCharacter]);
 
   if (isLoading) {
     return (
@@ -210,7 +210,7 @@ export default function CharacterPage() {
                 <div className="text-center py-8 text-muted-foreground">
                   <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>AI-анализ персонажа пока не загружен.</p>
-                  <p className="text-sm mt-2">Нажмите кнопку "Обновить" для загрузки.</p>
+                  <p className="text-sm mt-2">Нажмите кнопку &quot;Обновить&quot; для загрузки.</p>
                 </div>
               )}
             </CardContent>
