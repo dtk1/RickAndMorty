@@ -6,6 +6,7 @@ import { Filters } from "@/components/Filters";
 import { CharacterGrid } from "@/components/CharacterGrid";
 import { Pagination } from "@/components/Pagination";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SearchBarSkeleton, FiltersSkeleton, PaginationSkeleton } from "@/components/LoadingStates";
 import { useDebounce } from "@/hooks/useDebounce";
 import { CharacterFilters, CharacterResponse } from "@/lib/types";
 
@@ -82,21 +83,35 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-6 mb-8">
           <div>
-            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+            {isLoading && characters.length === 0 ? (
+              <SearchBarSkeleton />
+            ) : (
+              <SearchBar value={searchQuery} onChange={setSearchQuery} />
+            )}
           </div>
-          <Filters filters={filters} onFilterChange={handleFilterChange} />
+          {isLoading && characters.length === 0 ? (
+            <FiltersSkeleton />
+          ) : (
+            <Filters filters={filters} onFilterChange={handleFilterChange} />
+          )}
         </div>
 
         <CharacterGrid characters={characters} isLoading={isLoading} />
 
-        {pagination.pages > 1 && !isLoading && (
+        {isLoading && characters.length === 0 ? (
           <div className="mt-8">
-            <Pagination
-              currentPage={filters.page || 1}
-              totalPages={pagination.pages}
-              onPageChange={handlePageChange}
-            />
+            <PaginationSkeleton />
           </div>
+        ) : (
+          pagination.pages > 1 && (
+            <div className="mt-8 animate-in fade-in duration-300">
+              <Pagination
+                currentPage={filters.page || 1}
+                totalPages={pagination.pages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )
         )}
       </main>
     </div>

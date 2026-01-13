@@ -10,7 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Character } from "@/lib/types";
 import { getStatusColor } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCw, Sparkles } from "lucide-react";
+import { formatAiDescription } from "@/lib/formatText";
+import { CharacterDetailSkeleton, AiDescriptionSkeleton } from "@/components/LoadingStates";
 
 export default function CharacterPage() {
   const params = useParams();
@@ -59,9 +61,19 @@ export default function CharacterPage() {
       if (response.ok) {
         const data = await response.json();
         setAiDescription(data.description);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("AI description API error:", errorData);
+        // Устанавливаем fallback сообщение
+        setAiDescription(
+          `Не удалось загрузить AI-описание для ${characterName}. ${errorData.error || "Попробуйте обновить страницу."}`
+        );
       }
     } catch (error) {
       console.error("Error fetching AI description:", error);
+      setAiDescription(
+        `Ошибка при загрузке AI-описания для ${characterName}. Проверьте консоль для деталей.`
+      );
     } finally {
       setIsLoadingAi(false);
     }
@@ -80,17 +92,7 @@ export default function CharacterPage() {
           </div>
         </header>
         <main className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <Skeleton className="w-full aspect-square rounded-lg" />
-              <div className="space-y-4">
-                <Skeleton className="h-10 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-            </div>
-          </div>
+          <CharacterDetailSkeleton />
         </main>
       </div>
     );
@@ -179,24 +181,40 @@ export default function CharacterPage() {
             </div>
           </div>
 
-          {aiDescription && (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>AI Анализ</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoadingAi ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">{aiDescription}</p>
-                )}
-              </CardContent>
-            </Card>
-          )}
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <CardTitle>AI Анализ</CardTitle>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => character && fetchAiDescription(character.name)}
+                  disabled={isLoadingAi || !character}
+                >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingAi ? "animate-spin" : ""}`} />
+                  {isLoadingAi ? "Загрузка..." : "Обновить"}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoadingAi ? (
+                <AiDescriptionSkeleton />
+              ) : aiDescription ? (
+                <div className="text-muted-foreground">
+                  {formatAiDescription(aiDescription)}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>AI-анализ персонажа пока не загружен.</p>
+                  <p className="text-sm mt-2">Нажмите кнопку "Обновить" для загрузки.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
