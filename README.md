@@ -1,7 +1,7 @@
 # Rick and Morty - Fullstack приложение
 
 Fullstack приложение на Next.js (App Router) с TypeScript и Tailwind CSS для изучения персонажей из мультсериала Rick and Morty.
-
+Вебсайт: https://rick-and-morty-woad-ten.vercel.app/
 ## Технологии
 
 - **Next.js 14** (App Router)
